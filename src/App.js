@@ -1,4 +1,5 @@
 import "./App.css";
+import { ChatProvider } from "./contexts/ChatContext";
 import Login from "./pages/authPages/Login/Login";
 import Signup from "./pages/authPages/Signup/Signup";
 import Chat from "./pages/chat";
@@ -26,56 +27,58 @@ const PublicRoute = ({ children }) => {
 
 function App() {
   return (
-    <Routes>
-      <Route
-        path="/signup"
-        element={
-          <PublicRoute>
-            <Signup />
-          </PublicRoute>
-        }
-      />
+    <ChatProvider>
+      <Routes>
+        <Route
+          path="/signup"
+          element={
+            <PublicRoute>
+              <Signup />
+            </PublicRoute>
+          }
+        />
 
-      <Route
-        path="/login"
-        element={
-          <PublicRoute>
-            <Login />
-          </PublicRoute>
-        }
-      />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
 
-      <Route
-        path="/chat"
-        element={
-          <ProtectedRoute>
-            <Chat />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/chat/:chatId?"
+          element={
+            <ProtectedRoute>
+              <Chat />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/"
-        element={
-          localStorage.getItem("token") ? (
-            <Navigate to="/chat" replace />
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        }
-      />
+        <Route
+          path="/"
+          element={
+            localStorage.getItem("token") ? (
+              <Navigate to="/chat" replace />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
 
-      <Route
-        path="*"
-        element={
-          localStorage.getItem("token") ? (
-            <Navigate to="/chat" replace />
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        }
-      />
-    </Routes>
+        <Route
+          path="*"
+          element={
+            localStorage.getItem("token") ? (
+              <Navigate to="/chat/:chatId?" replace />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+      </Routes>
+    </ChatProvider>
   );
 }
 

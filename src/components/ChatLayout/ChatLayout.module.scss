@@ -1,0 +1,23 @@
+// src/components/ChatLayout/ChatLayout.module.scss
+.layout {
+  position: relative;
+}
+
+.sidebar {
+  @apply shadow-md;
+  z-index: 10;
+}
+
+.mainContent {
+  min-width: 0; // Prevent flex item from overflowing
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 20;
+  }
+}
