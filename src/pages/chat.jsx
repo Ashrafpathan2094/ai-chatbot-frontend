@@ -1,6 +1,6 @@
-import axios from "axios";
-import React, { useState } from "react";
-import Spinner from "./spinner/spinner";
+import { useState } from "react";
+import Spinner from "../components/spinner/spinner";
+import axiosInstance from "../utils/axios";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -13,18 +13,14 @@ const Chat = () => {
     try {
       setLoading(true);
 
-      let aiResp = await axios.post(`${process.env.REACT_APP_API_URL}/api/chat`, {
-        headers: {
-          authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NjBlOTY3MDQ1ODhjN2Y2ZTI3OTlhMCIsImlhdCI6MTc1MTE4MTY5NywiZXhwIjoxNzUxNzg2NDk3fQ.3SipZYCPpFGV7KdVcvDZ_x_JuALBE_unXSQZlHIqxaI",
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        messages: [...messages, { content: input, role: "user" }],
-        chatId,
-        userId: "6860e96704588c7f6e2799a0",
-      });
-      console.log("🚀 ~ handleMessageSend ~ aiResp:", aiResp);
+      let aiResp = await axiosInstance.post(
+        `${process.env.REACT_APP_API_URL}/api/chat`,
+        {
+          messages: [...messages, { content: input, role: "user" }],
+          chatId,
+          userId: "6860e96704588c7f6e2799a0",
+        }
+      );
 
       setMessages((prevMessages) => [
         ...prevMessages,
@@ -32,7 +28,6 @@ const Chat = () => {
         { content: aiResp?.data?.reply, role: "assistant" },
       ]);
       setInput("");
-      console.log("messages", messages);
       setChatId(aiResp?.data?.chatId);
     } catch (error) {
       console.error("Error sending message:", error);
@@ -42,9 +37,7 @@ const Chat = () => {
   };
   return (
     <>
-      <div className="pos-center">
-        {loading ? <Spinner /> : null}
-      </div>
+      <div className="pos-center">{loading ? <Spinner /> : null}</div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
