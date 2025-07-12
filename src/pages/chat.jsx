@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import ChatLayout from "../components/ChatLayout/ChatLayout";
 import Spinner from "../components/spinner/spinner";
 import { useChatContext } from "../contexts/ChatContext";
@@ -10,7 +11,12 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
-  const [chatId, setChatId] = useState("");
+  const { chatId: routeChatId } = useParams();
+  const [chatId, setChatId] = useState(routeChatId || "");
+
+  useEffect(() => {
+    setChatId(routeChatId || "");
+  }, [routeChatId]);
 
   const handleMessageSend = async () => {
     try {
